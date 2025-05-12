@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alphabet War: Riddle Recruitment</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+    }
+    #game {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    .dialogue {
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <h1>Alphabet War: Riddle Recruitment</h1>
+    <div id="output" class="dialogue"></div>
+    <input type="text" id="answerInput" placeholder="Type your answer here..." />
+    <button onclick="submitAnswer()">Submit</button>
+  </div>
+
+  <script>
+    const output = document.getElementById('output');
+    const answerInput = document.getElementById('answerInput');
+
+    const characters = [
+      {
+        name: 'A',
+        side: 'E',
+        intro: "A: I'm only joining if you prove you're riddle-worthy. No pressure. (He says, while juggling flaming pineapples)",
+        riddles: [
+          { q: "I have keys but no locks. I have space but no room. You can enter, but can’t go outside. What am I?", a: "keyboard" },
+          { q: "What has a head, a tail, but no body?", a: "coin" },
+          { q: "I’m full of holes, but I hold water. What am I?", a: "sponge" },
+        ]
+      },
+    ];
+
+    let currentCharIndex = 0;
+    let currentRiddleIndex = 0;
+
+    function showDialogue(text) {
+      output.innerHTML = `<p>${text}</p>`;
+    }
+
+    function nextRiddle() {
+      const char = characters[currentCharIndex];
+      if (currentRiddleIndex === 0) {
+        showDialogue(char.intro);
+        setTimeout(() => {
+          showDialogue(`Riddle 1: ${char.riddles[0].q}`);
+        }, 3000);
+      } else {
+        showDialogue(`Riddle ${currentRiddleIndex + 1}: ${char.riddles[currentRiddleIndex].q}`);
+      }
+    }
+
+    function submitAnswer() {
+      const char = characters[currentCharIndex];
+      const currentRiddle = char.riddles[currentRiddleIndex];
+      const userAnswer = answerInput.value.toLowerCase().trim();
+
+      if (userAnswer === currentRiddle.a) {
+        currentRiddleIndex++;
+        if (currentRiddleIndex < char.riddles.length) {
+          nextRiddle();
+        } else {
+          showDialogue(`${char.name}: You passed! I’m in. Let’s go raise some alphabetic havoc!`);
+          currentCharIndex++;
+          currentRiddleIndex = 0;
+          if (currentCharIndex < characters.length) {
+            setTimeout(() => nextRiddle(), 3000);
+          } else {
+            showDialogue("You've recruited all available letters... for now. Stay tuned for Phase Two of the Alphabet War!");
+          }
+        }
+      } else {
+        showDialogue(`${char.name}: Wrong! Try again. Or don't. I'm not your mother.`);
+      }
+      answerInput.value = '';
+    }
+
+    nextRiddle();
+  </script>
+</body>
+</html>
